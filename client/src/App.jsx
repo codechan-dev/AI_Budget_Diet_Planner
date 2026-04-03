@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import AuthModal from './components/AuthModal'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import PlanPage from './pages/PlanPage'
 
 function AuthBar() {
   const { user, logout } = useAuth();
@@ -20,6 +21,9 @@ function AuthBar() {
       >
         {user ? (
           <>
+            <Link to="/plan" className="btn btn-sm btn-outline-success rounded-pill px-3 fw-semibold">
+              <i className="bi bi-calendar-week me-1" />My Plan
+            </Link>
             <span className="badge rounded-pill px-3 py-2 fw-semibold"
               style={{ background: 'rgba(255,255,255,0.25)', color: '#0f172a', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.4)' }}>
               <i className="bi bi-person-check me-1" />
@@ -78,6 +82,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/plan" element={<PlanPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

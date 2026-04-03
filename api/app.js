@@ -6,6 +6,8 @@ import express from 'express';
 import cors from 'cors';
 import { GoogleGenAI, Type } from '@google/genai';
 import authRouter from './routes/auth.js';
+import preferencesRouter from './routes/preferences.js';
+import planRouter from './routes/plan.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +18,12 @@ app.use(express.json());
 
 // Auth routes
 app.use('/api/auth', authRouter);
+
+// Preferences routes (protected)
+app.use('/api/preferences', preferencesRouter);
+
+// Plan routes (protected)
+app.use('/api/plan', planRouter);
 
 // Check for API Key
 const apiKey = process.env.GEMINI_API_KEY;
