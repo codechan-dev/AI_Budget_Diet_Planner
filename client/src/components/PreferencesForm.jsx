@@ -61,8 +61,8 @@ const PreferencesForm = ({ onSaved }) => {
         };
 
         // Client-side guard before hitting the server
-        if (!payload.budget || payload.budget <= 0 || payload.budget >= 10000) {
-            setError('Budget must be a number between 1 and 9999.');
+        if (!payload.budget || payload.budget < 1 || payload.budget >= 10000) {
+            setError('Budget must be greater than 0 and less than 10000.');
             return;
         }
         if (allergies.length > 10) {
