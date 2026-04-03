@@ -2,8 +2,17 @@ import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma.js';
 import { signToken } from '../utils/jwt.js';
 
-// Simple, ReDoS-safe email check: presence of exactly one @ with non-empty local and domain parts
-const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+// Linear email check — no regex backtracking possible
+const isValidEmail = (email) => {
+    const at = email.indexOf('@');
+    const dot = email.lastIndexOf('.');
+    return (
+        at > 0 &&
+        dot > at + 1 &&
+        dot < email.length - 1 &&
+        !email.includes(' ')
+    );
+};
 
 // POST /api/auth/register
 export const register = async (req, res) => {
@@ -15,7 +24,7 @@ export const register = async (req, res) => {
     if (typeof name !== 'string' || name.trim().length < 2) {
         return res.status(400).json({ error: 'Name must be at least 2 characters.' });
     }
-    if (!EMAIL_REGEX.test(email)) {
+    if (!isValidEmail(email)) {
         return res.status(400).json({ error: 'Invalid email format.' });
     }
     if (typeof password !== 'string' || password.length < 6) {

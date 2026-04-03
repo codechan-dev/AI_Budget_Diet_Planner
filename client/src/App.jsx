@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import DietPlanner from './components/DietPlanner'
 import ParticalBG from './components/ParticalBG'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import AuthModal from './components/AuthModal'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 
 function AuthBar() {
   const { user, logout } = useAuth();
@@ -30,13 +33,21 @@ function AuthBar() {
             </button>
           </>
         ) : (
-          <button
-            className="btn btn-sm btn-success rounded-pill px-3 fw-semibold"
-            onClick={() => setShowModal(true)}
-          >
-            <i className="bi bi-person me-1" />
-            Login / Register
-          </button>
+          <>
+            <Link to="/login" className="btn btn-sm btn-outline-success rounded-pill px-3 fw-semibold">
+              Login
+            </Link>
+            <Link to="/register" className="btn btn-sm btn-success rounded-pill px-3 fw-semibold">
+              Register
+            </Link>
+            <button
+              className="btn btn-sm btn-link text-success fw-semibold p-0 ms-1"
+              onClick={() => setShowModal(true)}
+              title="Quick login"
+            >
+              <i className="bi bi-person" />
+            </button>
+          </>
         )}
       </div>
 
@@ -45,18 +56,30 @@ function AuthBar() {
   );
 }
 
-function App() {
+function HomePage() {
   // Disable hover effects on touch devices to avoid sticky :hover
   if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
     document.documentElement.classList.add('no-hover');
   }
   return (
+    <div className=''>
+      <ParticalBG />
+      <AuthBar />
+      <DietPlanner />
+    </div>
+  );
+}
+
+function App() {
+  return (
     <AuthProvider>
-      <div className=''>
-        <ParticalBG />
-        <AuthBar />
-        <DietPlanner />
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </BrowserRouter>
     </AuthProvider>
   )
 }

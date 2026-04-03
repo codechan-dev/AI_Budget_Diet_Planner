@@ -14,8 +14,17 @@ const authLimiter = rateLimit({
     message: { error: 'Too many requests, please try again later.' },
 });
 
+// Limit /me reads to prevent token-scanning
+const meLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' },
+});
+
 router.post('/register', authLimiter, register);
 router.post('/login', authLimiter, login);
-router.get('/me', authMiddleware, getMe);
+router.get('/me', meLimiter, authMiddleware, getMe);
 
 export default router;
