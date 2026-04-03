@@ -1,11 +1,21 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { register, login, getMe } from '../controllers/authController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.post('/register', register);
-router.post('/login', login);
+// Limit repeated register/login attempts from the same IP
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' },
+});
+
+router.post('/register', authLimiter, register);
+router.post('/login', authLimiter, login);
 router.get('/me', authMiddleware, getMe);
 
 export default router;

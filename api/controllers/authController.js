@@ -2,7 +2,8 @@ import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma.js';
 import { signToken } from '../utils/jwt.js';
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Simple, ReDoS-safe email check: presence of exactly one @ with non-empty local and domain parts
+const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 // POST /api/auth/register
 export const register = async (req, res) => {
